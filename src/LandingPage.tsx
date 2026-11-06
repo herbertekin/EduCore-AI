@@ -198,7 +198,7 @@ export default function LandingPage({ onSignIn }: LandingPageProps) {
                   </div>
                 </div>
               </div>
-              <p className="px-2 pt-3 text-center text-[11px] text-slate-400">Illustrative interface preview — not live school data</p>
+         {/* //     <p className="px-2 pt-3 text-center text-[11px] text-slate-400">Illustrative interface preview — not live school data</p> */}
             </div>
           </div>
         </div>
