@@ -21,7 +21,7 @@ import {
   Layers,
 } from 'lucide-react'
 
-import { supabase } from './lib/supabase'
+import { supabase } from '../lib/supabase'
 
 type Props = {
   schoolId: string
