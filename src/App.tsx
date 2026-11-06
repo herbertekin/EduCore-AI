@@ -41,6 +41,11 @@ const CBEManagement = lazy(
   () => import('./pages/CBEManagement')
 )
 
+// GradingSettings.tsx is currently located directly inside src/.
+const GradingSettings = lazy(
+  () => import('./GradingSettings')
+)
+
 type School = {
   id: string
   name: string
@@ -130,6 +135,7 @@ export default function App() {
     | 'examinations'
     | 'examinationResults'
     | 'cbe'
+    | 'gradingSettings'
   >('dashboard')
 
   const [teacherPage, setTeacherPage] = useState<
@@ -721,7 +727,7 @@ export default function App() {
     return (
       <main className="min-h-screen bg-slate-100">
 
-        <header className="bg-slate-900 text-white px-6 py-5 flex justify-between items-center">
+        <header className="bg-slate-900 text-white px-4 py-4 sm:px-6 sm:py-5 flex flex-wrap justify-between items-center gap-3">
           <div>
             <h1 className="text-2xl font-bold">
               🎓 EduCore AI
@@ -740,7 +746,7 @@ export default function App() {
           </button>
         </header>
 
-        <section className="max-w-5xl mx-auto p-6">
+        <section className="max-w-5xl mx-auto p-4 sm:p-6">
 
           <div className="bg-white rounded-xl shadow-sm p-6 mb-8">
             <p className="text-slate-500 text-sm">
@@ -853,8 +859,8 @@ export default function App() {
       <Suspense fallback={<PageLoading />}>
         <div className="min-h-screen bg-slate-100">
 
-          <header className="bg-slate-900 px-6 py-4">
-            <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
+          <header className="bg-slate-900 px-3 py-4 sm:px-6">
+            <div className="max-w-7xl mx-auto flex flex-col items-stretch gap-4 sm:flex-row sm:items-center sm:justify-between">
 
               <div>
                 <h2 className="text-white font-bold text-lg">
@@ -866,11 +872,14 @@ export default function App() {
                 </p>
               </div>
 
-              <div className="flex flex-wrap gap-2">
+              <nav
+                aria-label="Administrator navigation"
+                className="-mx-1 flex w-full gap-2 overflow-x-auto px-1 pb-2 sm:mx-0 sm:w-auto sm:flex-wrap sm:overflow-visible sm:pb-0"
+              >
 
                 <button
                   onClick={() => setAdminPage('dashboard')}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium ${
+                  className={`min-h-10 shrink-0 px-4 py-2 rounded-lg text-sm font-medium ${
                     adminPage === 'dashboard'
                       ? 'bg-emerald-600 text-white'
                       : 'bg-white text-slate-900 hover:bg-slate-100'
@@ -881,7 +890,7 @@ export default function App() {
 
                 <button
                   onClick={() => setAdminPage('reports')}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium ${
+                  className={`min-h-10 shrink-0 px-4 py-2 rounded-lg text-sm font-medium ${
                     adminPage === 'reports'
                       ? 'bg-emerald-600 text-white'
                       : 'bg-white text-slate-900 hover:bg-slate-100'
@@ -892,7 +901,7 @@ export default function App() {
 
                 <button
                   onClick={() => setAdminPage('timetable')}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium ${
+                  className={`min-h-10 shrink-0 px-4 py-2 rounded-lg text-sm font-medium ${
                     adminPage === 'timetable'
                       ? 'bg-emerald-600 text-white'
                       : 'bg-white text-slate-900 hover:bg-slate-100'
@@ -903,7 +912,7 @@ export default function App() {
 
                 <button
                   onClick={() => setAdminPage('assessments')}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium ${
+                  className={`min-h-10 shrink-0 px-4 py-2 rounded-lg text-sm font-medium ${
                     adminPage === 'assessments'
                       ? 'bg-emerald-600 text-white'
                       : 'bg-white text-slate-900 hover:bg-slate-100'
@@ -914,7 +923,7 @@ export default function App() {
 
                 <button
                   onClick={() => setAdminPage('examinations')}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium ${
+                  className={`min-h-10 shrink-0 px-4 py-2 rounded-lg text-sm font-medium ${
                     adminPage === 'examinations'
                       ? 'bg-emerald-600 text-white'
                       : 'bg-white text-slate-900 hover:bg-slate-100'
@@ -925,7 +934,7 @@ export default function App() {
 
                 <button
                   onClick={() => setAdminPage('examinationResults')}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium ${
+                  className={`min-h-10 shrink-0 px-4 py-2 rounded-lg text-sm font-medium ${
                     adminPage === 'examinationResults'
                       ? 'bg-emerald-600 text-white'
                       : 'bg-white text-slate-900 hover:bg-slate-100'
@@ -936,7 +945,7 @@ export default function App() {
 
                 <button
                   onClick={() => setAdminPage('cbe')}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium ${
+                  className={`min-h-10 shrink-0 px-4 py-2 rounded-lg text-sm font-medium ${
                     adminPage === 'cbe'
                       ? 'bg-emerald-600 text-white'
                       : 'bg-white text-slate-900 hover:bg-slate-100'
@@ -946,24 +955,41 @@ export default function App() {
                 </button>
 
                 <button
+                  onClick={() => setAdminPage('gradingSettings')}
+                  className={`min-h-10 shrink-0 px-4 py-2 rounded-lg text-sm font-medium ${
+                    adminPage === 'gradingSettings'
+                      ? 'bg-emerald-600 text-white'
+                      : 'bg-white text-slate-900 hover:bg-slate-100'
+                  }`}
+                >
+                  🎓 Grading Settings
+                </button>
+
+                <button
                   onClick={handleBackToRoles}
-                  className="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg text-sm"
+                  className="min-h-10 shrink-0 bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg text-sm"
                 >
                   Change Portal
                 </button>
 
                 <button
                   onClick={handleLogout}
-                  className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm"
+                  className="min-h-10 shrink-0 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm"
                 >
                   Logout
                 </button>
 
-              </div>
+              </nav>
             </div>
           </header>
 
-          {adminPage === 'examinations' ? (
+          {adminPage === 'gradingSettings' ? (
+            <GradingSettings
+              schoolId={selectedSchool.id}
+              schoolName={selectedSchool.name}
+              onBack={() => setAdminPage('dashboard')}
+            />
+          ) : adminPage === 'examinations' ? (
             <ExaminationManagement
               schoolId={selectedSchool.id}
               schoolName={selectedSchool.name}
@@ -1034,7 +1060,7 @@ export default function App() {
     return (
       <main className="min-h-screen bg-slate-100">
 
-        <header className="bg-slate-900 text-white px-6 py-5 flex justify-between items-center">
+        <header className="bg-slate-900 text-white px-4 py-4 sm:px-6 sm:py-5 flex flex-wrap justify-between items-center gap-3">
 
           <div>
             <h1 className="text-2xl font-bold">
@@ -1055,7 +1081,7 @@ export default function App() {
 
         </header>
 
-        <section className="max-w-5xl mx-auto p-6">
+        <section className="max-w-5xl mx-auto p-4 sm:p-6">
 
           <button
             onClick={handleBackToRoles}
@@ -1148,8 +1174,8 @@ export default function App() {
       <Suspense fallback={<PageLoading />}>
         <div className="min-h-screen bg-slate-100">
 
-          <header className="bg-slate-900 px-6 py-4">
-            <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
+          <header className="bg-slate-900 px-3 py-4 sm:px-6">
+            <div className="max-w-7xl mx-auto flex flex-col items-stretch gap-4 sm:flex-row sm:items-center sm:justify-between">
 
               <div>
                 <h2 className="text-white font-bold text-lg">
@@ -1161,11 +1187,14 @@ export default function App() {
                 </p>
               </div>
 
-              <div className="flex flex-wrap gap-2">
+              <nav
+                aria-label="Teacher navigation"
+                className="-mx-1 flex w-full gap-2 overflow-x-auto px-1 pb-2 sm:mx-0 sm:w-auto sm:flex-wrap sm:overflow-visible sm:pb-0"
+              >
 
                 <button
                   onClick={() => setTeacherPage('dashboard')}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium ${
+                  className={`min-h-10 shrink-0 px-4 py-2 rounded-lg text-sm font-medium ${
                     teacherPage === 'dashboard'
                       ? 'bg-emerald-600 text-white'
                       : 'bg-white text-slate-900 hover:bg-slate-100'
@@ -1176,7 +1205,7 @@ export default function App() {
 
                 <button
                   onClick={() => setTeacherPage('attendance')}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium ${
+                  className={`min-h-10 shrink-0 px-4 py-2 rounded-lg text-sm font-medium ${
                     teacherPage === 'attendance'
                       ? 'bg-emerald-600 text-white'
                       : 'bg-white text-slate-900 hover:bg-slate-100'
@@ -1187,7 +1216,7 @@ export default function App() {
 
                 <button
                   onClick={() => setTeacherPage('reports')}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium ${
+                  className={`min-h-10 shrink-0 px-4 py-2 rounded-lg text-sm font-medium ${
                     teacherPage === 'reports'
                       ? 'bg-emerald-600 text-white'
                       : 'bg-white text-slate-900 hover:bg-slate-100'
@@ -1198,7 +1227,7 @@ export default function App() {
 
                 <button
                   onClick={() => setTeacherPage('examinationResults')}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium ${
+                  className={`min-h-10 shrink-0 px-4 py-2 rounded-lg text-sm font-medium ${
                     teacherPage === 'examinationResults'
                       ? 'bg-emerald-600 text-white'
                       : 'bg-white text-slate-900 hover:bg-slate-100'
@@ -1209,19 +1238,19 @@ export default function App() {
 
                 <button
                   onClick={handleBackToRoles}
-                  className="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg text-sm"
+                  className="min-h-10 shrink-0 bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg text-sm"
                 >
                   Change Portal
                 </button>
 
                 <button
                   onClick={handleLogout}
-                  className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm"
+                  className="min-h-10 shrink-0 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm"
                 >
                   Logout
                 </button>
 
-              </div>
+              </nav>
             </div>
           </header>
 
