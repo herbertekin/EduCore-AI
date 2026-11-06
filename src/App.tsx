@@ -8,6 +8,7 @@ import {
 
 import type { Session } from '@supabase/supabase-js'
 import { supabase } from './lib/supabase'
+import LandingPage from './LandingPage'
 
 const Dashboard = lazy(() => import('./pages/Dashboard'))
 const ParentFees = lazy(() => import('./pages/ParentFees'))
@@ -112,6 +113,7 @@ export default function App() {
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [showLogin, setShowLogin] = useState(false)
 
   const [newPassword, setNewPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -456,6 +458,7 @@ export default function App() {
     }
 
     setSession(null)
+    setShowLogin(false)
     setSelectedMembership(null)
     setSelectedFeeStudent(null)
     setNeedsPasswordSetup(false)
@@ -588,6 +591,10 @@ export default function App() {
   // 10. LOGIN SCREEN
   // --------------------------------------------------
 
+  if (!session && !showLogin) {
+    return <LandingPage onSignIn={() => setShowLogin(true)} />
+  }
+
   if (!session) {
     return (
       <main className="min-h-screen bg-slate-100 flex items-center justify-center p-4">
@@ -656,6 +663,14 @@ export default function App() {
             </button>
 
           </form>
+
+          <button
+            type="button"
+            onClick={() => setShowLogin(false)}
+            className="mt-4 w-full rounded-lg border border-slate-200 p-3 text-sm font-semibold text-slate-600 transition hover:bg-slate-50"
+          >
+            Back to home
+          </button>
 
           <p className="text-center text-xs text-slate-400 mt-6">
             EduCore AI School Management System
