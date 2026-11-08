@@ -10,6 +10,7 @@ import type { Session } from '@supabase/supabase-js'
 import { supabase } from './lib/supabase'
 import LandingPage from './LandingPage'
 import SchoolRegistration from './SchoolRegistration'
+import AddSchool from './AddSchool'
 
 const Dashboard = lazy(() => import('./pages/Dashboard'))
 const ParentFees = lazy(() => import('./pages/ParentFees'))
@@ -126,6 +127,8 @@ export default function App() {
 
   const [selectedMembership, setSelectedMembership] =
     useState<Membership | null>(null)
+
+  const [showAddSchool, setShowAddSchool] = useState(false)
 
   const [students, setStudents] = useState<Student[]>([])
   const [selectedFeeStudent, setSelectedFeeStudent] =
@@ -751,6 +754,32 @@ export default function App() {
     schools.find((school) => school.id === schoolId)
 
   // --------------------------------------------------
+  // ADD ANOTHER SCHOOL TO THE CURRENT ADMIN ACCOUNT
+  // --------------------------------------------------
+
+  const handleSchoolAdded = (school: School) => {
+    setSchools((current) =>
+      current.some((item) => item.id === school.id) ? current : [...current, school]
+    )
+    setMemberships((current) =>
+      current.some((item) => item.school_id === school.id && item.role === 'admin')
+        ? current
+        : [...current, { school_id: school.id, role: 'admin' }]
+    )
+    setShowAddSchool(false)
+    setMessage('')
+  }
+
+  if (showAddSchool) {
+    return (
+      <AddSchool
+        onBack={() => setShowAddSchool(false)}
+        onSchoolAdded={handleSchoolAdded}
+      />
+    )
+  }
+
+  // --------------------------------------------------
   // 14. SELECTED ROLE AND SCHOOL
   // --------------------------------------------------
 
@@ -793,9 +822,20 @@ export default function App() {
             </p>
           </div>
 
-          <h2 className="text-xl font-bold text-slate-900 mb-5">
-            Your available portals
-          </h2>
+          <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <h2 className="text-xl font-bold text-slate-900">
+              Your available portals
+            </h2>
+            {memberships.some((membership) => membership.role === 'admin') && (
+              <button
+                type="button"
+                onClick={() => setShowAddSchool(true)}
+                className="inline-flex items-center justify-center gap-2 rounded-lg bg-emerald-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-700"
+              >
+                + Add another school
+              </button>
+            )}
+          </div>
 
           {loading && (
             <p className="text-slate-500 mb-4">
