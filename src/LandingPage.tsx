@@ -16,6 +16,7 @@ import { useState } from 'react'
 
 type LandingPageProps = {
   onSignIn: () => void
+  onRegister: () => void
 }
 
 const features = [
@@ -57,7 +58,10 @@ const features = [
   },
 ]
 
-export default function LandingPage({ onSignIn }: LandingPageProps) {
+export default function LandingPage({
+  onSignIn,
+  onRegister,
+}: LandingPageProps) {
   const [menuOpen, setMenuOpen] = useState(false)
 
   const goTo = (id: string) => {
@@ -104,6 +108,12 @@ export default function LandingPage({ onSignIn }: LandingPageProps) {
             <button onClick={onSignIn} className="rounded-xl px-4 py-2.5 text-sm font-bold text-slate-700 transition hover:bg-slate-100">
               Sign in
             </button>
+            <button
+              onClick={onRegister}
+              className="rounded-xl border border-emerald-700 px-5 py-2.5 text-sm font-bold text-emerald-700 transition hover:bg-emerald-50"
+            >
+              Register your school
+            </button>
             <button onClick={onSignIn} className="inline-flex items-center gap-2 rounded-xl bg-emerald-700 px-5 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-emerald-800">
               Access portal <ArrowRight size={16} />
             </button>
@@ -127,6 +137,15 @@ export default function LandingPage({ onSignIn }: LandingPageProps) {
               <button onClick={() => goTo('how-it-works')} className="rounded-lg px-3 py-3 text-left text-sm font-semibold hover:bg-slate-50">How it works</button>
               <button onClick={() => goTo('about')} className="rounded-lg px-3 py-3 text-left text-sm font-semibold hover:bg-slate-50">About</button>
               <button onClick={onSignIn} className="mt-2 rounded-xl bg-emerald-700 px-4 py-3 text-center text-sm font-bold text-white">Sign in to your portal</button>
+              <button
+                onClick={() => {
+                  setMenuOpen(false)
+                  onRegister()
+                }}
+                className="rounded-xl border border-emerald-700 px-4 py-3 text-center text-sm font-bold text-emerald-700"
+              >
+                Register your school
+              </button>
             </div>
           </div>
         )}
@@ -151,6 +170,12 @@ export default function LandingPage({ onSignIn }: LandingPageProps) {
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <button onClick={onSignIn} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-emerald-700 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-emerald-900/10 transition hover:-translate-y-0.5 hover:bg-emerald-800">
                 Access your school portal <ArrowRight size={18} />
+              </button>
+              <button
+                onClick={onRegister}
+                className="inline-flex min-h-12 items-center justify-center rounded-xl border border-emerald-700 bg-white px-6 py-3 text-sm font-bold text-emerald-700 transition hover:bg-emerald-50"
+              >
+                Register your school
               </button>
               <button onClick={() => goTo('features')} className="inline-flex min-h-12 items-center justify-center rounded-xl border border-slate-300 bg-white px-6 py-3 text-sm font-bold text-slate-700 transition hover:border-emerald-300 hover:bg-emerald-50">
                 Explore features
@@ -198,6 +223,7 @@ export default function LandingPage({ onSignIn }: LandingPageProps) {
                   </div>
                 </div>
               </div>
+              <p className="px-2 pt-3 text-center text-[11px] text-slate-400">Illustrative interface preview — not live school data</p>
             </div>
           </div>
         </div>

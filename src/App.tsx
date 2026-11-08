@@ -9,6 +9,7 @@ import {
 import type { Session } from '@supabase/supabase-js'
 import { supabase } from './lib/supabase'
 import LandingPage from './LandingPage'
+import SchoolRegistration from './SchoolRegistration'
 
 const Dashboard = lazy(() => import('./pages/Dashboard'))
 const ParentFees = lazy(() => import('./pages/ParentFees'))
@@ -114,6 +115,7 @@ export default function App() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showLogin, setShowLogin] = useState(false)
+  const [showRegister, setShowRegister] = useState(false)
 
   const [newPassword, setNewPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -459,6 +461,7 @@ export default function App() {
 
     setSession(null)
     setShowLogin(false)
+    setShowRegister(false)
     setSelectedMembership(null)
     setSelectedFeeStudent(null)
     setNeedsPasswordSetup(false)
@@ -591,8 +594,21 @@ export default function App() {
   // 10. LOGIN SCREEN
   // --------------------------------------------------
 
+  if (!session && showRegister) {
+    return (
+      <SchoolRegistration
+        onBack={() => setShowRegister(false)}
+      />
+    )
+  }
+
   if (!session && !showLogin) {
-    return <LandingPage onSignIn={() => setShowLogin(true)} />
+    return (
+      <LandingPage
+        onSignIn={() => setShowLogin(true)}
+        onRegister={() => setShowRegister(true)}
+      />
+    )
   }
 
   if (!session) {
