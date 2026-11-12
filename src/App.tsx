@@ -9,7 +9,6 @@ import {
 import type { Session } from '@supabase/supabase-js'
 import { supabase } from './lib/supabase'
 import LandingPage from './LandingPage'
-import SchoolRegistration from './SchoolRegistration'
 import AddSchool from './AddSchool'
 
 const Dashboard = lazy(() => import('./pages/Dashboard'))
@@ -93,6 +92,10 @@ const ROLE_ICONS: Record<string, string> = {
   student: '🎓',
 }
 
+// This email is only used to control the frontend navigation.
+// The database RPC remains the authoritative security check.
+const PLATFORM_OWNER_EMAIL = 'tekinbutaki@gmail.com'
+
 function PageLoading() {
   return (
     <main className="min-h-screen flex items-center justify-center bg-slate-100">
@@ -116,7 +119,6 @@ export default function App() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showLogin, setShowLogin] = useState(false)
-  const [showRegister, setShowRegister] = useState(false)
 
   const [newPassword, setNewPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -150,6 +152,9 @@ export default function App() {
   >('dashboard')
 
   const [message, setMessage] = useState('')
+
+  const isPlatformOwner =
+    session?.user.email?.toLowerCase() === PLATFORM_OWNER_EMAIL
 
   // Detect invitation or recovery links in the URL.
   const hashParams = new URLSearchParams(
@@ -464,7 +469,7 @@ export default function App() {
 
     setSession(null)
     setShowLogin(false)
-    setShowRegister(false)
+    setShowAddSchool(false)
     setSelectedMembership(null)
     setSelectedFeeStudent(null)
     setNeedsPasswordSetup(false)
@@ -597,20 +602,9 @@ export default function App() {
   // 10. LOGIN SCREEN
   // --------------------------------------------------
 
-  if (!session && showRegister) {
-    return (
-      <SchoolRegistration
-        onBack={() => setShowRegister(false)}
-      />
-    )
-  }
-
   if (!session && !showLogin) {
     return (
-      <LandingPage
-        onSignIn={() => setShowLogin(true)}
-        onRegister={() => setShowRegister(true)}
-      />
+      <LandingPage onSignIn={() => setShowLogin(true)} />
     )
   }
 
@@ -770,7 +764,7 @@ export default function App() {
     setMessage('')
   }
 
-  if (showAddSchool) {
+  if (showAddSchool && isPlatformOwner) {
     return (
       <AddSchool
         onBack={() => setShowAddSchool(false)}
@@ -826,7 +820,8 @@ export default function App() {
             <h2 className="text-xl font-bold text-slate-900">
               Your available portals
             </h2>
-            {memberships.some((membership) => membership.role === 'admin') && (
+            {isPlatformOwner &&
+              memberships.some((membership) => membership.role === 'admin') && (
               <button
                 type="button"
                 onClick={() => setShowAddSchool(true)}
